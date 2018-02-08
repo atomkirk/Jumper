@@ -32,11 +32,7 @@
 
 # Comparing
 
-    occurs(.OnOrBefore, date)
-
     within(.Month, date)
-
-    between(date, date)
 
 # Formatting
 

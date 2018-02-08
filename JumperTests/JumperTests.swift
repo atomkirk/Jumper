@@ -21,16 +21,31 @@ class JumperTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+//    func testExample() {
+//        // This is an example of a functional test case.
+//        // Use XCTAssert and related functions to verify your tests produce the correct results.
+//        let date = Date(ISOString: "")
+//    }
+    
+//    func testPerformanceExample() {
+//        // This is an example of a performance test case.
+//        self.measure {
+//            // Put the code you want to measure the time of here.
+//        }
+//    }
+    
+    func testCreateWithISOString() {
+        let date = Date(ISOString: "2018-01-23T03:06:46Z")!
+        XCTAssertEqual(date, Date(timeIntervalSince1970: 1516676806))
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    func testCreateWithCustomFormat() {
+        let date = Date(string: "1986-07-11", format: "yyyy-MM-dd")!
+        XCTAssertEqual(date, Date(timeIntervalSince1970: 521424000))
     }
-    
+
+    func testCreateWithDictionary() {
+        let date = Date([.Year: 1986, .Month: 7, .Day: 11])!
+        XCTAssertEqual(date, Date(timeIntervalSince1970: 521424000))
+    }
 }

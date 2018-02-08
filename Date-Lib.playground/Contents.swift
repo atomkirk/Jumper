@@ -168,8 +168,18 @@ extension Date {
     }
     
     // count(.Days, in: .Month, +1)
+    func count(_ unit: DateComponent, in outer: DateComponent, _ offset: Int = 0) -> Int? {
+        if let result = Jumper.calendar.range(of: Date.toNativeUnits(unit, outer), in: Date.toNativeUnits(outer), for: self) {
+            return result.count
+        }
+        return nil
+    }
     
-    private static func toNativeUnits(_ comp: DateComponent) -> Calendar.Component {
+    func within(_ unit: DateComponent, _ other: Date) -> Bool {
+        return Jumper.calendar.isDate(self, equalTo: other, toGranularity: Date.toNativeUnits(unit))
+    }
+    
+    private static func toNativeUnits(_ comp: DateComponent, _ outer: DateComponent? = nil) -> Calendar.Component {
         switch comp {
         case .Year, .Years: return .year
         case .Month, .Months: return .month
@@ -211,3 +221,13 @@ let birth = Date(string: "1986-07-11", format: "yyyy-MM-dd")!
 now.diff(.Years, .since, birth)
 now.diff(.Seconds, .since, birth)
 birth.diff(.Months, .until, now)
+
+//Jumper.calendar.rangeOfUnit(.day, inUnit: .month, forDate: Date())
+now.count(.Day, in: .Month)
+
+Jumper.calendar.range(of: .hour, in: .year, for: Date())
+
+let february = Date([.Year: 2018, .Month: 2, .Day: 5])!
+now.within(.Month, february)
+now.within(.Week, february)
+
