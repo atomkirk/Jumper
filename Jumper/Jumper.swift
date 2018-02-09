@@ -98,7 +98,7 @@ extension Date {
     
     // change([.Day: 4])
     func change(_ param: [DateComponent: Int]) -> Date {
-        var components = Jumper.calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: self)
+        var components = Jumper.calendar.dateComponents(in: TimeZone(secondsFromGMT: 0)!, from: self)
         for pair in param {
             switch pair {
             case let (.Year, value), let (.Years, value):

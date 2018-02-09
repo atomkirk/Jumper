@@ -48,4 +48,18 @@ class JumperTests: XCTestCase {
         let date = Date([.Year: 1986, .Month: 7, .Day: 11])!
         XCTAssertEqual(date, Date(timeIntervalSince1970: 521424000))
     }
+    
+    func testCreateWithComponent() {
+        var comps = DateComponents(calendar: Jumper.calendar, timeZone: nil, era: nil, year: 1986, month: 7, day: 11, hour: 0, minute: nil, second: nil, nanosecond: nil, weekday: nil, weekdayOrdinal: nil, quarter: nil, weekOfMonth: nil, weekOfYear: nil, yearForWeekOfYear: nil)
+        comps.timeZone = TimeZone(secondsFromGMT: 0)
+        let date = Date(components: comps)!
+        XCTAssertEqual(date, Date(timeIntervalSince1970: 521424000))
+    }
+    
+    func testChange() {
+        let date = Date([.Year: 1986, .Month: 7, .Day: 11])!
+        let changed = date.change([.Days: 4, .Minutes: 3])
+        let expected = Date([.Year: 1986, .Month: 7, .Day: 4, .Hour: 0, .Minute: 3])
+        XCTAssertEqual(changed, expected)
+    }
 }

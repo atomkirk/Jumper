@@ -201,6 +201,12 @@ let now = Date()
 now.change([.Days: 4, .Minutes: 3])
 now.change([.Days: 4, .Minutes: 3])
 
+let date = Date([.Year: 1986, .Month: 7, .Day: 11])!
+let changed = date.change([.Days: 4, .Minutes: 3])
+let expected = Date([.Year: 1986, .Month: 7, .Day: 4, .Hour: 0, .Minute: 3])
+changed == expected
+//Calendar.current.date(bySetting: .day, value: 15, of: date)!
+
 now.move([.Days: 4])
 now.move([.Days: 4, .Minute: 2])
 
