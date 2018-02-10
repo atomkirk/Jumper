@@ -6,8 +6,6 @@
 //  Copyright © 2016 Adam Kirk. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
 //! Project version number for Jumper.
 FOUNDATION_EXPORT double JumperVersionNumber;
 
