@@ -158,7 +158,7 @@ extension Date {
     }
     
     // clamp(.Start, .Month, -1)
-    func clamp(_ boundary: DateBoundary, _ comp: DateComponent, _ offset: Int = 0) -> Date {
+    func clamp(to boundary: DateBoundary, of comp: DateComponent, _ offset: Int = 0) -> Date {
         let date: Date
         if offset != 0 {
             date = move([comp: offset])

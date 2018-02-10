@@ -67,21 +67,21 @@ class JumperTests: XCTestCase {
     
     func testClampStart() {
         let date = Date([.year: 1986, .month: 7, .day: 11])!
-        let changed = date.clamp(.start, .month)
+        let changed = date.clamp(to: .start, of: .month)
         let expected = Date([.year: 1986, .month: 7, .day: 1])
         XCTAssertEqual(changed, expected)
     }
     
     func testClampEnd() {
         let date = Date([.year: 1986, .month: 7, .day: 11])!
-        let changed = date.clamp(.end, .month)
+        let changed = date.clamp(to: .end, of: .month)
         let expected = Date([.year: 1986, .month: 7, .day: 31, .hour: 23, .minute: 59, .second: 59])
         XCTAssertEqual(changed, expected)
     }
     
     func testClampEndOfLastMonth() {
         let date = Date([.year: 1986, .month: 7, .day: 11])!
-        let changed = date.clamp(.end, .month, -1)
+        let changed = date.clamp(to: .end, of: .month, -1)
         let expected = Date([.year: 1986, .month: 6, .day: 30, .hour: 23, .minute: 59, .second: 59])
         XCTAssertEqual(changed, expected)
     }
