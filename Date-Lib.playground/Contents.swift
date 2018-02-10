@@ -203,7 +203,7 @@ now.change([.Days: 4, .Minutes: 3])
 
 let date = Date([.Year: 1986, .Month: 7, .Day: 11])!
 let changed = date.change([.Days: 4, .Minutes: 3])
-let expected = Date([.Year: 1986, .Month: 7, .Day: 4, .Hour: 0, .Minute: 3])
+let expected = Date([.Year: 1986, .Month: 7, .Day: 4, .Hour: 0, .Minute: 3])!
 changed == expected
 //Calendar.current.date(bySetting: .day, value: 15, of: date)!
 
@@ -217,6 +217,8 @@ now.clamp(.end, .Month, 1) // end of next month
 now.clamp(.end, .Day, -1) // end of yesterday
 now.clamp(.end, .Month, -3) // end of the month, 3 months ago
 now.clamp(.end, .Week, -3) // end of the week, 3 weeks ago
+let endOfJuly = Date([.Year: 1986, .Month: 7, .Day: 31, .Hour: 23, .Minute: 59, .Second: 59])!
+expected.clamp(.end, .Month) == endOfJuly
 
 now.what(.Day, of: .Year)
 now.what(.Day, of: .Week)

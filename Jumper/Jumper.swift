@@ -9,13 +9,13 @@
 import Foundation
 
 enum DateComponent {
-    case Year, Years
-    case Month, Months
-    case Week, Weeks
-    case Day, Days
-    case Hour, Hours
-    case Minute, Minutes
-    case Second, Seconds
+    case year, years
+    case month, months
+    case week, weeks
+    case day, days
+    case hour, hours
+    case minute, minutes
+    case second, seconds
 }
 
 enum DateBoundary {
@@ -26,8 +26,20 @@ enum DateTense {
     case since, until
 }
 
+enum SymbolUnit {
+    case weekday, month, quarter, era
+}
+
+enum SymbolLength {
+    case long, standard, short, veryShort
+}
+
 class Jumper {
     public static var calendar: Calendar = Calendar.current
+}
+
+enum FormatterStyleType {
+    case date, time
 }
 
 extension Date {
@@ -47,7 +59,7 @@ extension Date {
             let formatter = DateFormatter()
             formatter.calendar = Jumper.calendar
             formatter.locale = Locale(identifier: "en_US_POSIX")
-            formatter.timeZone = TimeZone(secondsFromGMT: 0)
+            formatter.timeZone = Jumper.calendar.timeZone
             formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
             if let date = formatter.date(from: ISOString)  {
                 self = date
@@ -61,7 +73,7 @@ extension Date {
     // Date(string: String format: String)
     init?(string: String, format: String) {
         let formatter = DateFormatter()
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.timeZone = Jumper.calendar.timeZone
         formatter.dateFormat = format
         if let date = formatter.date(from: string)  {
             self = date
@@ -74,7 +86,7 @@ extension Date {
     // Date([.Year: 2015])
     init?(_ comps: [DateComponent: Int]) {
         var components = DateComponents()
-        components.timeZone = TimeZone(secondsFromGMT: 0)
+        components.timeZone = Jumper.calendar.timeZone
         for (comp, value) in comps {
             components.setValue(value, for: Date.toNativeUnits(comp))
         }
@@ -101,19 +113,19 @@ extension Date {
         var components = Jumper.calendar.dateComponents(in: TimeZone(secondsFromGMT: 0)!, from: self)
         for pair in param {
             switch pair {
-            case let (.Year, value), let (.Years, value):
+            case let (.year, value), let (.years, value):
                 components.year = value
-            case let (.Month, value), let (.Months, value):
+            case let (.month, value), let (.months, value):
                 components.month = value
-            case let (.Week, value), let (.Weeks, value):
+            case let (.week, value), let (.weeks, value):
                 components.weekOfYear = value
-            case let (.Day, value), let (.Days, value):
+            case let (.day, value), let (.days, value):
                 components.day = value
-            case let (.Hour, value), let (.Hours, value):
+            case let (.hour, value), let (.hours, value):
                 components.hour = value
-            case let (.Minute, value), let (.Minutes, value):
+            case let (.minute, value), let (.minutes, value):
                 components.minute = value
-            case let (.Second, value), let (.Seconds, value):
+            case let (.second, value), let (.seconds, value):
                 components.minute = value
             }
         }
@@ -123,21 +135,22 @@ extension Date {
     // move([.Month: 3])
     func move(_ param: [DateComponent: Int]) -> Date {
         var components = DateComponents()
+        components.timeZone = Jumper.calendar.timeZone
         for pair in param {
             switch pair {
-            case let (.Year, value), let (.Years, value):
+            case let (.year, value), let (.years, value):
                 components.year = value
-            case let (.Month, value), let (.Months, value):
+            case let (.month, value), let (.months, value):
                 components.month = value
-            case let (.Week, value), let (.Weeks, value):
+            case let (.week, value), let (.weeks, value):
                 components.weekOfYear = value
-            case let (.Day, value), let (.Days, value):
+            case let (.day, value), let (.days, value):
                 components.day = value
-            case let (.Hour, value), let (.Hours, value):
+            case let (.hour, value), let (.hours, value):
                 components.hour = value
-            case let (.Minute, value), let (.Minutes, value):
+            case let (.minute, value), let (.minutes, value):
                 components.minute = value
-            case let (.Second, value), let (.Seconds, value):
+            case let (.second, value), let (.seconds, value):
                 components.minute = value
             }
         }
@@ -176,7 +189,7 @@ extension Date {
     
     // diff(.Years, .Since, date)
     func diff(_ unit: DateComponent, _ tense: DateTense, _ target: Date) -> Int {
-        let components: DateComponents
+        var components: DateComponents
         switch tense {
         case .since:
             components = Jumper.calendar.dateComponents([Date.toNativeUnits(unit)], from: target, to: self)
@@ -188,7 +201,14 @@ extension Date {
     
     // count(.Days, in: .Month, +1)
     func count(_ unit: DateComponent, in outer: DateComponent, _ offset: Int = 0) -> Int? {
-        if let result = Jumper.calendar.range(of: Date.toNativeUnits(unit, outer), in: Date.toNativeUnits(outer), for: self) {
+        let date: Date
+        if offset != 0 {
+            date = move([outer: offset])
+        }
+        else {
+            date = self
+        }
+        if let result = Jumper.calendar.range(of: Date.toNativeUnits(unit, outer), in: Date.toNativeUnits(outer), for: date) {
             return result.count
         }
         return nil
@@ -198,15 +218,74 @@ extension Date {
         return Jumper.calendar.isDate(self, equalTo: other, toGranularity: Date.toNativeUnits(unit))
     }
     
+    // string([.date: .long, .time: .short]) //=> "July 11, 1986 at 10:17 AM"
+    func string(_ format: [FormatterStyleType: DateFormatter.Style]) -> String {
+        let formatter = DateFormatter()
+        formatter.timeZone = Jumper.calendar.timeZone
+        for (t, style) in format {
+            switch t {
+            case .date: formatter.dateStyle = style
+            case .time: formatter.timeStyle = style
+            }
+        }
+        return formatter.string(from: self)
+    }
+    
+    // string("YYYY-MM-dd") //=> "1986-07-11"
+    func string(_ format: String) -> String {
+        let formatter = DateFormatter()
+        formatter.timeZone = Jumper.calendar.timeZone
+        formatter.dateFormat = format
+        return formatter.string(from: self)
+    }
+
     private static func toNativeUnits(_ comp: DateComponent, _ outer: DateComponent? = nil) -> Calendar.Component {
         switch comp {
-        case .Year, .Years: return .year
-        case .Month, .Months: return .month
-        case .Week, .Weeks: return .weekOfYear
-        case .Day, .Days: return .day
-        case .Hour, .Hours: return .hour
-        case .Minute, .Minutes: return .minute
-        case .Second, .Seconds: return .second
+        case .year, .years: return .year
+        case .month, .months: return .month
+        case .week, .weeks: return .weekOfYear
+        case .day, .days: return .day
+        case .hour, .hours: return .hour
+        case .minute, .minutes: return .minute
+        case .second, .seconds: return .second
+        }
+    }
+}
+
+extension DateFormatter {
+    
+    // NSDateFormatter.symbols(.Weekday, .Short)
+    static func symbols(_ unit: SymbolUnit, _ length: SymbolLength, _ standalone: Bool = true) -> [String] {
+        let c = Jumper.calendar
+        switch unit {
+        case .weekday:
+            switch length {
+            case .long: return standalone ? c.standaloneWeekdaySymbols: c.weekdaySymbols
+            case .standard: return standalone ? c.standaloneWeekdaySymbols : c.weekdaySymbols
+            case .short: return standalone ? c.shortStandaloneWeekdaySymbols : c.shortWeekdaySymbols
+            case .veryShort: return standalone ? c.veryShortStandaloneWeekdaySymbols : c.shortWeekdaySymbols
+            }
+        case .month:
+            switch length {
+            case .long: return standalone ? c.standaloneMonthSymbols: c.monthSymbols
+            case .standard: return standalone ? c.standaloneMonthSymbols : c.monthSymbols
+            case .short: return standalone ? c.shortStandaloneMonthSymbols : c.shortMonthSymbols
+            case .veryShort: return standalone ? c.veryShortStandaloneMonthSymbols : c.veryShortMonthSymbols
+            }
+        case .quarter:
+            switch length {
+            case .long: return standalone ? c.standaloneQuarterSymbols: c.quarterSymbols
+            case .standard: return standalone ? c.standaloneQuarterSymbols : c.quarterSymbols
+            case .short: return standalone ? c.shortStandaloneQuarterSymbols : c.shortQuarterSymbols
+            case .veryShort: return standalone ? c.shortStandaloneQuarterSymbols : c.shortQuarterSymbols
+            }
+        case .era:
+            switch length {
+            case .long: return c.longEraSymbols
+            case .standard: return c.eraSymbols
+            case .short: return c.eraSymbols
+            case .veryShort: return c.eraSymbols
+            }
         }
     }
 }
