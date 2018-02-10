@@ -207,12 +207,6 @@ class JumperTests: XCTestCase {
         let result = date.string("YYYY-MM-dd")
         XCTAssertEqual(result, "1986-07-11")
     }
-    
-    func testEasyFormat() {
-        let date = Date([.year: 1986, .month: 7, .day: 11, .hour: 10, .minute: 17])!
-        let result = date.string("{} {}, {}", )
-        XCTAssertEqual(result, "1986-07-11")
-    }
 }
 
 

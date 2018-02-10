@@ -46,7 +46,7 @@ extension Date {
     
     // Date(ISOString: String)
     init?(ISOString: String) {
-        if #available(iOS 10.0, *) {
+        if #available(iOS 10.0, macOS 10.12, watchOS 3.0, tvOS 10.0, *) {
             let formatter = ISO8601DateFormatter()
             formatter.formatOptions = [.withInternetDateTime]
             if let date = formatter.date(from: ISOString)  {
