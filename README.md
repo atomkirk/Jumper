@@ -45,7 +45,7 @@ in calculations:
     date.diff(.years, .since, date2) // 20
 
     date.count(.days, in: .month, +1) // 31
--
+
 ### Comparing
 
     date.within(.Month, date2) // true/false
