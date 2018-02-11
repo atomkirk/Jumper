@@ -214,7 +214,7 @@ extension Date {
         return nil
     }
     
-    func within(_ unit: DateComponent, _ other: Date) -> Bool {
+    func within(same unit: DateComponent, of other: Date) -> Bool {
         return Jumper.calendar.isDate(self, equalTo: other, toGranularity: Date.toNativeUnits(unit))
     }
     

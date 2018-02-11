@@ -33,7 +33,7 @@ and the parameters are enums so you get auto completion for possible values.
 
 ### Comparing
 
-    date.within(.month, date2) // true/false
+    date.within(same: .month, of: date2) // true/false
 
 ### Formatting
 

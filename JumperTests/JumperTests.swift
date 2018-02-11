@@ -158,21 +158,21 @@ class JumperTests: XCTestCase {
     func testWithinSameMonth() {
         let date1 = Date([.year: 1986, .month: 7, .day: 11])!
         let date2 = Date([.year: 1986, .month: 7, .day: 9])!
-        let result = date1.within(.month, date2)
+        let result = date1.within(same: .month, of: date2)
         XCTAssertTrue(result)
     }
     
     func testWithinSameYear() {
         let date1 = Date([.year: 1986, .month: 7, .day: 11])!
         let date2 = Date([.year: 1986, .month: 8, .day: 9])!
-        let result = date1.within(.year, date2)
+        let result = date1.within(same: .year, of: date2)
         XCTAssertTrue(result)
     }
     
     func testNotWithin() {
         let date1 = Date([.year: 1986, .month: 7, .day: 11])!
         let date2 = Date([.year: 1987, .month: 8, .day: 9])!
-        let result = date1.within(.year, date2)
+        let result = date1.within(same: .year, of: date2)
         XCTAssertFalse(result)
     }
     
