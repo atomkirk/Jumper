@@ -13,7 +13,7 @@ and the parameters are enums so you get auto completion for possible values.
 
     Date(ISOString: "2018-02-01T03:04:01")
     Date(string: "2018-02-01" format: "YYYY-MM-dd")
-    Date([.Year: 2015])
+    Date([.year: 2015])
 
 ### Moving
 
@@ -33,7 +33,7 @@ and the parameters are enums so you get auto completion for possible values.
 
 ### Comparing
 
-    date.within(.Month, date2) // true/false
+    date.within(.month, date2) // true/false
 
 ### Formatting
 
