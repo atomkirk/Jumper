@@ -21,7 +21,7 @@ and the parameters are enums so you get auto completion for possible values.
 
     date.move([.months: 3]) // 2018-05-04
 
-    date.clamp(to: .end, of: .month, -1) // 2018-02-29 23:59:59
+    date.clamp(to: .end, of: .month, -1) // '-1' is optional offset. So end of previous month: 2018-02-29 23:59:59
 
 ### Measuring
 
@@ -29,7 +29,7 @@ and the parameters are enums so you get auto completion for possible values.
 
     date.diff(.years, .since, date2) // 20
 
-    date.count(.days, in: .month, +1) // 31
+    date.count(.days, in: .month, +1) // '+1' is optional offset. So number of days in next month: 31
 
 ### Comparing
 
