@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum DateComponent {
+public enum DateComponent {
     case year, years
     case month, months
     case week, weeks
@@ -18,34 +18,34 @@ enum DateComponent {
     case second, seconds
 }
 
-enum DateBoundary {
+public enum DateBoundary {
     case start, end
 }
 
-enum DateTense {
+public enum DateTense {
     case since, until
 }
 
-enum SymbolUnit {
+public enum SymbolUnit {
     case weekday, month, quarter, era
 }
 
-enum SymbolLength {
+public enum SymbolLength {
     case long, standard, short, veryShort
 }
 
-class Jumper {
+public class Jumper {
     public static var calendar: Calendar = Calendar.current
 }
 
-enum FormatterStyleType {
+public enum FormatterStyleType {
     case date, time
 }
 
-extension Date {
+public extension Date {
     
     // Date(ISOString: String)
-    init?(ISOString: String) {
+    public init?(ISOString: String) {
         if #available(iOS 10.0, macOS 10.12, watchOS 3.0, tvOS 10.0, *) {
             let formatter = ISO8601DateFormatter()
             formatter.formatOptions = [.withInternetDateTime]
@@ -71,7 +71,7 @@ extension Date {
     }
     
     // Date(string: String format: String)
-    init?(string: String, format: String) {
+    public init?(string: String, format: String) {
         let formatter = DateFormatter()
         formatter.timeZone = Jumper.calendar.timeZone
         formatter.dateFormat = format
@@ -84,7 +84,7 @@ extension Date {
     }
     
     // Date([.Year: 2015])
-    init?(_ comps: [DateComponent: Int]) {
+    public init?(_ comps: [DateComponent: Int]) {
         var components = DateComponents()
         components.timeZone = Jumper.calendar.timeZone
         for (comp, value) in comps {
@@ -99,7 +99,7 @@ extension Date {
     }
     
     // Date(components: DateComponents)
-    init?(components: DateComponents) {
+    public init?(components: DateComponents) {
         if let date = Jumper.calendar.date(from: components)  {
             self = date
         }
@@ -109,7 +109,7 @@ extension Date {
     }
     
     // change([.Day: 4])
-    func change(_ param: [DateComponent: Int]) -> Date {
+    public func change(_ param: [DateComponent: Int]) -> Date {
         var components = Jumper.calendar.dateComponents(in: TimeZone(secondsFromGMT: 0)!, from: self)
         for pair in param {
             switch pair {
@@ -133,7 +133,7 @@ extension Date {
     }
     
     // move([.Month: 3])
-    func move(_ param: [DateComponent: Int]) -> Date {
+    public func move(_ param: [DateComponent: Int]) -> Date {
         var components = DateComponents()
         components.timeZone = Jumper.calendar.timeZone
         for pair in param {
@@ -158,7 +158,7 @@ extension Date {
     }
     
     // clamp(.Start, .Month, -1)
-    func clamp(to boundary: DateBoundary, of comp: DateComponent, _ offset: Int = 0) -> Date {
+    public func clamp(to boundary: DateBoundary, of comp: DateComponent, _ offset: Int = 0) -> Date {
         let date: Date
         if offset != 0 {
             date = move([comp: offset])
@@ -183,12 +183,12 @@ extension Date {
     }
     
     // what(.Day, of: .Year)
-    func what(_ inner: DateComponent, of outer: DateComponent) -> Int {
+    public func what(_ inner: DateComponent, of outer: DateComponent) -> Int {
         return Jumper.calendar.ordinality(of: Date.toNativeUnits(inner), in: Date.toNativeUnits(outer), for: self)!
     }
     
     // diff(.Years, .Since, date)
-    func diff(_ unit: DateComponent, _ tense: DateTense, _ target: Date) -> Int {
+    public func diff(_ unit: DateComponent, _ tense: DateTense, _ target: Date) -> Int {
         var components: DateComponents
         switch tense {
         case .since:
@@ -200,7 +200,7 @@ extension Date {
     }
     
     // count(.Days, in: .Month, +1)
-    func count(_ unit: DateComponent, in outer: DateComponent, _ offset: Int = 0) -> Int? {
+    public func count(_ unit: DateComponent, in outer: DateComponent, _ offset: Int = 0) -> Int? {
         let date: Date
         if offset != 0 {
             date = move([outer: offset])
@@ -214,12 +214,12 @@ extension Date {
         return nil
     }
     
-    func within(same unit: DateComponent, of other: Date) -> Bool {
+    public func within(same unit: DateComponent, of other: Date) -> Bool {
         return Jumper.calendar.isDate(self, equalTo: other, toGranularity: Date.toNativeUnits(unit))
     }
     
     // string([.date: .long, .time: .short]) //=> "July 11, 1986 at 10:17 AM"
-    func string(_ format: [FormatterStyleType: DateFormatter.Style]) -> String {
+    public func string(_ format: [FormatterStyleType: DateFormatter.Style]) -> String {
         let formatter = DateFormatter()
         formatter.timeZone = Jumper.calendar.timeZone
         for (t, style) in format {
@@ -232,7 +232,7 @@ extension Date {
     }
     
     // string("YYYY-MM-dd") //=> "1986-07-11"
-    func string(_ format: String) -> String {
+    public func string(_ format: String) -> String {
         let formatter = DateFormatter()
         formatter.timeZone = Jumper.calendar.timeZone
         formatter.dateFormat = format
@@ -252,10 +252,10 @@ extension Date {
     }
 }
 
-extension DateFormatter {
+public extension DateFormatter {
     
     // NSDateFormatter.symbols(.Weekday, .Short)
-    static func symbols(_ unit: SymbolUnit, _ length: SymbolLength, _ standalone: Bool = true) -> [String] {
+    public static func symbols(_ unit: SymbolUnit, _ length: SymbolLength, _ standalone: Bool = true) -> [String] {
         let c = Jumper.calendar
         switch unit {
         case .weekday:
